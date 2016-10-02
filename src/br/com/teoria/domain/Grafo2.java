@@ -19,8 +19,14 @@ public class Grafo2 {
 	private BufferedReader br;
 	private BufferedWriter bw;
 	private int matriz[][] = null;
-	private Map<Integer, List<Integer>> mapVertices;
-
+	private Map<Integer, List<Integer>> listaAdj;
+	/*
+	 * Implementação de um grafo não dirigido
+	 */
+	
+	 /* 
+	 * Caminho do arquivo de entrada e saida
+	 */
 	public Grafo2(String caminhoArquivoEntrada, String caminhoArquivoSaida) throws IOException {
 
 		this.caminhoArquivoEntrada = caminhoArquivoEntrada;
@@ -28,39 +34,56 @@ public class Grafo2 {
 		this.caminhoArquivoSaida = caminhoArquivoSaida;
 		// inicializaMatriz();
 
-		mapeiaVertices();
+		mapeiaArestasListaAdj();
 	}
-
-	/*public int[][] getMatriz() {
-		for (Integer i : mapVertices.keySet()) {
-			for (Integer m : mapVertices.get(i)) {
+	/*
+	 * Retorna uma matriz de adjacencia
+	 */
+	public int[][] getMatriz() {
+		for (Integer i : listaAdj.keySet()) {
+			for (Integer m : listaAdj.get(i)) {
 				matriz[i][m] = 1;
 			}
 		}
 		return matriz;
-	}*/
-
-	private void verticeVertice(int v1, int v2) {
-		insereVertices(v1, v2);
-		insereVertices(v2, v1);
 	}
-
-	private void insereVertices(int v1, int v2) {
-		if (mapVertices.containsKey(v1)) {
-			if (!(mapVertices.get(v1).contains(v2))) {
-				mapVertices.get(v1).add(v2);
+	/*
+	 * Esse metodo organiza a forma que as arestas irão ser construidas 
+	 * dentro da lista de adjacencia. ligando x -> y e y -> x.
+	 * Em outras palavras, ira ligar um vertice a outro indo e voltando.
+	 * Me pergunte se tiver alguma duvida
+	 * 
+	 * Autor: Wendel Ribeiro
+	 */
+	private void verticeVertice(int v1, int v2) {
+		insereArestas(v1, v2);
+		insereArestas(v2, v1);
+	}
+	
+	/*
+	 * Insere arestas apartir de dois vertices
+	 */
+	
+	private void insereArestas(int v1, int v2) {
+		if (listaAdj.containsKey(v1)) {
+			if (!(listaAdj.get(v1).contains(v2))) {
+				listaAdj.get(v1).add(v2);
 			}
 		} else {
 			ArrayList<Integer> listaVertices = new ArrayList<>();
 			listaVertices.add(v2);
-			mapVertices.put(v1, listaVertices);
+			listaAdj.put(v1, listaVertices);
 		}
 	}
-
-	private void mapeiaVertices() throws IOException {
+	/*
+	 *  A partir da Stream que esta direcionada para o arquivo com os vertices e as arestas,
+	 *  esse metodo insere em um HashMap as arestas.
+	 */
+	private void mapeiaArestasListaAdj() throws IOException {
 		int v1, v2;
 		String linha;
-		mapVertices = new HashMap<>();
+		
+		listaAdj = new HashMap<>();
 		linha = br.readLine();
 		while ((linha != null) && !(linha.isEmpty())) {
 			v1 = Integer.parseInt(linha.split("[ ]")[0]);
@@ -69,7 +92,9 @@ public class Grafo2 {
 			linha = br.readLine();
 		}
 	}
-
+	/*
+	 * Inicializa a matriz de acordo com a quantidade de vertices definina 
+	 */
 	private void inicializaMatriz() {
 		matriz = new int[numVertices][numVertices];
 		for (int i = 0; i < numVertices; i++) {
@@ -78,16 +103,25 @@ public class Grafo2 {
 			}
 		}
 	}
-
+	/*
+	 * Retorna a quantidade de vertices
+	 */
 	public int getNumVertices() throws IOException {
 		br = new BufferedReader(new FileReader(caminhoArquivoEntrada));
 		return (Integer.parseInt(br.readLine()));
 	}
-
+	
+	/*
+	 * Retorna o caminho do arquivo txt de arestas e vertices
+	 */
+	
 	public String getCaminhoArquivo() {
 		return caminhoArquivoEntrada;
 	}
-
+	/*
+	 * Representação falsa de uma matriz a partir de uma lista de adjacencia
+	 * 
+	 */
 	public void imprimeMatrizDisfarcada() {
 		System.out.print(" ");
 		for (int i = 0; i < numVertices; i++) {
@@ -97,7 +131,7 @@ public class Grafo2 {
 		for (int i = 0; i < numVertices; i++) {
 			System.out.print(i + 1 + " ");
 			for (int k = 0; k < numVertices; k++) {
-				if (mapVertices.containsKey(i) && mapVertices.get(i).contains(k)) {
+				if (listaAdj.containsKey(i) && listaAdj.get(i).contains(k)) {
 					System.out.print(1 + " ");
 				} else {
 					System.out.print(0 + " ");
@@ -107,7 +141,9 @@ public class Grafo2 {
 			System.out.println();
 		}
 	}
-
+	/*
+	 * Imprime uma matriz inicializada e mapeada com vertices
+	 */
 	public void imprimeMatriz() {
 		if (matriz != null) {
 			System.out.print(" ");
@@ -133,15 +169,15 @@ public class Grafo2 {
 	}
 	
 	
-	/*public void buscaProfundidade(int veticeInicial){
-		List<Integer> listaAberta;
-		ArrayList<Integer> listaFechada = new ArrayList<>();
-		listaFechada.add(veticeInicial);
-		listaAberta = mapVertices.get(veticeInicial);
-		for(Integer i : listaAberta){
-			System.out.println(i);
+	public Map<Integer, Integer> getGrau(){
+		Map<Integer, Integer> verticesGrau = new HashMap<>();
+		for(Integer chave : listaAdj.keySet()){
+			verticesGrau.put(chave, listaAdj.get(chave).size());
 		}
-	}*/
+		return verticesGrau;
+	}
+	
+	
 	
 	public int buscaLargura(int verticeInicial){
 		int profundidade = 0;
@@ -158,7 +194,7 @@ public class Grafo2 {
 			//setVertices = new HashSet<>();
 			for(Integer i: arvore.get(profundidade)){
 				
-				for(Integer g : mapVertices.get(i)){
+				for(Integer g : listaAdj.get(i)){
 					if(!setFechado.contains(g)){
 						//setVertices.add(g);
 						setAberto.add(g);	

@@ -20,14 +20,18 @@ public class Executa {
 		try {
 			g = new Grafo2("C:\\Users\\wendel\\arquivo.txt", null);
 			
-			System.out.println(g.buscaLargura(1));
+			
+			/*for(Integer chave : g.getGrau().keySet()){
+				System.out.println(chave+": "+g.getGrau().get(chave));
+			}*/
+			System.out.println("Quantidade: "+g.getQtdVertices());
+			//System.out.println(g.buscaLargura(1));
 			
 		
 			
 			/*System.out.println("MATRIZ DISFARCADA");
 			g.imprimeMatrizDisfarcada();*/
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -104,7 +104,7 @@ public class Grafo2 {
 		}
 	}
 	/*
-	 * Retorna a quantidade de vertices
+	 * Retorna a quantidade de vertices lidos do arquivo
 	 */
 	public int getNumVertices() throws IOException {
 		br = new BufferedReader(new FileReader(caminhoArquivoEntrada));
@@ -176,8 +176,12 @@ public class Grafo2 {
 		}
 		return verticesGrau;
 	}
-	
-	
+	/*
+	 * Quantidade de vertices
+	 */
+	public int getQtdVertices(){
+		return getGrau().size();
+	}
 	
 	public int buscaLargura(int verticeInicial){
 		int profundidade = 0;

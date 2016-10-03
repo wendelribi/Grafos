@@ -111,6 +111,12 @@ public class Grafo2 {
 		return (Integer.parseInt(br.readLine()));
 	}
 	
+	
+	public int getQtdArestas(){
+		// TODO: Fazer esse metodo
+		return 0;
+	}
+	
 	/*
 	 * Retorna o caminho do arquivo txt de arestas e vertices
 	 */

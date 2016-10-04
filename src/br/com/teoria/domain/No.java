@@ -1,42 +1,54 @@
 package br.com.teoria.domain;
 
 public class No {
-	private Integer posicao;
 	private Integer valor;
-	private Integer qtdVertices;
+	private No pai;
 
 	public No(int valor) {
+		this.pai = null;
 		this.valor = valor;
-		this.qtdVertices=1;
+
 	}
 
-	public void addQtdV(){
-		qtdVertices++;
-	}
-	
-	public void setValor(int valor){
+	public No(int valor, No pai) {
+		this.pai = pai;
 		this.valor = valor;
+
 	}
 	
-	public Integer getPosicao() {
-		return posicao;
+	public No getPai() {
+		return pai;
 	}
 
-	public void setPosicao(Integer posicao) {
-		this.posicao = posicao;
+	public void setPai(No pai) {
+		this.pai = pai;
+	}
+
+	public void setValor(int valor) {
+		this.valor = valor;
+	}
+
+	public Integer getValor() {
+		return valor;
+	}
+
+	public void setValor(Integer valor) {
+		this.valor = valor;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if((obj instanceof Integer) && ((Integer)obj).equals(this.posicao)){
+		if ((obj instanceof No) && ((No) obj).valor.equals(this.valor)) {
 			return true;
 		}
 		return false;
 	}
 	
+	
 	@Override
 	public int hashCode() {
-		return posicao;
+		return valor;
 	}
 	
+
 }

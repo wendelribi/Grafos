@@ -209,7 +209,7 @@ public class Grafo {
 	 * Loucura - Busca em largura implementada com Map, set e uma classe No.
 	 */
 	public Map<Integer, Set<No>> buscaLargura(int verticeInicial) {
-		if(!listaAdj.containsKey(verticeInicial)){
+		if (!listaAdj.containsKey(verticeInicial)) {
 			return null;
 		}
 		int nivel = 1;
@@ -257,24 +257,43 @@ public class Grafo {
 		}
 		arquivo.close();
 	}
-	
-	public void verificaGrafo(){
-		Integer vertice = null;
-		for(Integer i : listaAdj.keySet()){
-			System.out.println(i);
-			vertice = i;
-			break;
+
+	public List<List<No>> verificaGrafo() {
+		List<List<No>> partesGrafo = new ArrayList<>();
+
+		Stack<Integer> todosVertices = new Stack<>();
+		Stack<Integer> sobras = null;
+
+		todosVertices.addAll(listaAdj.keySet());
+
+		int vertice = todosVertices.pop();
+
+		partesGrafo.add(buscaProfundidade(vertice));
+		No no = null;
+		while (!todosVertices.isEmpty()) {
+			boolean controle = false;
+			sobras = new Stack<>();
+			no = new No(todosVertices.pop());
+			for (List<No> grafo : partesGrafo) {
+				if (grafo.contains(no)) {
+					controle = true;
+				}
+			}
+			if (controle == false) {
+				sobras.push(no.getValor());
+			}
+			if (!sobras.isEmpty()) {
+
+				partesGrafo.add(buscaProfundidade(sobras.pop()));
+			}
+			todosVertices.addAll(sobras);
 		}
-		if(vertice!=null){
-			System.out.println(vertice);
-		}
-		
-		
-		
+
+		return partesGrafo;
 	}
 
 	public List<No> buscaProfundidade(int verticeInicial) {
-		if(!listaAdj.containsKey(verticeInicial)){
+		if (!listaAdj.containsKey(verticeInicial)) {
 			return null;
 		}
 		No no = new No(verticeInicial);

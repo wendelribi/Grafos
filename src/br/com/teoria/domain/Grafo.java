@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 public class Grafo {
 
@@ -208,6 +209,9 @@ public class Grafo {
 	 * Loucura - Busca em largura implementada com Map, set e uma classe No.
 	 */
 	public Map<Integer, Set<No>> buscaLargura(int verticeInicial) {
+		if(!listaAdj.containsKey(verticeInicial)){
+			return null;
+		}
 		int nivel = 1;
 		No no = new No(verticeInicial);
 		no.setPai(no);
@@ -223,7 +227,7 @@ public class Grafo {
 			for (No pai : listaAberta) {
 				for (Integer s : listaAdj.get(pai.getValor())) {
 					no = new No(s, pai);
-					if(!listaFechada.contains(no)){
+					if (!listaFechada.contains(no)) {
 						listaFilhos.add(no);
 					}
 				}
@@ -232,7 +236,7 @@ public class Grafo {
 			listaFechada.addAll(listaAberta);
 			listaAberta = new HashSet<>();
 			listaAberta.addAll(listaFilhos);
-			if(!listaFilhos.isEmpty()){
+			if (!listaFilhos.isEmpty()) {
 				arvore.put(nivel, listaFilhos);
 				nivel++;
 			}
@@ -253,5 +257,45 @@ public class Grafo {
 		}
 		arquivo.close();
 	}
+	
+	public void verificaGrafo(){
+		Integer vertice = null;
+		for(Integer i : listaAdj.keySet()){
+			System.out.println(i);
+			vertice = i;
+			break;
+		}
+		if(vertice!=null){
+			System.out.println(vertice);
+		}
+		
+		
+		
+	}
 
+	public List<No> buscaProfundidade(int verticeInicial) {
+		if(!listaAdj.containsKey(verticeInicial)){
+			return null;
+		}
+		No no = new No(verticeInicial);
+		no.setPai(no);
+		List<No> listArvore = new ArrayList<>();
+		listArvore.add(no);
+		Stack<No> pilha = new Stack<>();
+		pilha.push(no);
+		while (!pilha.isEmpty()) {
+			for (Integer r : listaAdj.get(no.getValor())) {
+				No filho = new No(r);
+				filho.setPai(new No(no.getValor()));
+				if (!((listArvore.contains(filho)) || (pilha.contains(filho)))) {
+					pilha.push(filho);
+				}
+			}
+			no = pilha.pop();
+			if (!listArvore.contains(no)) {
+				listArvore.add(no);
+			}
+		}
+		return listArvore;
+	}
 }

@@ -20,14 +20,16 @@ public class Executa {
 
 		try {
 			g = new Grafo("C:\\Users\\wendel\\arquivo.txt", "C:\\Users\\wendel\\saida.txt");
-			Map<Integer, Set<No>> arvore = g.buscaLargura(5);
-			for(Integer s : arvore.keySet()){
+			g.verificaGrafo();
+			//Map<Integer, Set<No>> arvore = g.buscaLargura(5);
+			//g.buscaProfundidade(1);
+			/*for(Integer s : arvore.keySet()){
 				System.out.print(s);
 				for(No n : arvore.get(s)){
 					System.out.print("->"+"("+n.getPai().getValor()+")"+n.getValor());
 				}
 				System.out.println();
-			}
+			}*/
 			
 			System.out.println();
 		} catch (IOException e) {

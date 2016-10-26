@@ -215,12 +215,20 @@ abstract public class Grafo {
 	}
 
 	public int getNumeroVertices() throws IOException {
+		
 		if (inicializado) {
 			return numeroVertices;
 		} else {
 			inicializado = true;
 			arquivoLeitura = new BufferedReader(new FileReader(caminhoArquivoLeitura));
-			return (Integer.parseInt(arquivoLeitura.readLine()));
+			try{
+				numeroVertices = Integer.parseInt(arquivoLeitura.readLine());	
+			}catch (Exception e) {
+				
+				throw new NumberFormatException("Seu arquivo esta fora do padrão");
+			}
+			
+			return numeroVertices;
 		}
 	}
 

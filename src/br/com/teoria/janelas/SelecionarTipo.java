@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -77,6 +78,8 @@ public class SelecionarTipo extends JFrame {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (NumberFormatException e2) {
+					JOptionPane.showMessageDialog(null, "Arquivo fora do padrão");
 				}
 
 			}
@@ -97,6 +100,8 @@ public class SelecionarTipo extends JFrame {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (NumberFormatException e2) {
+					JOptionPane.showMessageDialog(null, "Arquivo fora do padrão");
 				}
 
 			}

@@ -2,319 +2,274 @@ package br.com.teoria.domain;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
-public class Grafo {
+import javax.swing.JOptionPane;
 
-	private Integer numVertices;
-	private String caminhoArquivoEntrada;
-	private String caminhoArquivoSaida;
-	private BufferedReader br;
-	private BufferedWriter bw;
-	private Integer matriz[][] = null;
-	private Map<Integer, List<Integer>> listaAdj;
-	private Integer qtdArestas = null;
+abstract public class Grafo {
+	private String caminhoArquivoLeitura;
+	private String caminhoArquivoEscrita;
+	protected Integer numeroVertices;
+	protected Integer numeroArestas;
+	private BufferedReader arquivoLeitura;
+	private boolean inicializado;
 
-	/*
-	 * Implementação de um grafo não dirigido
-	 */
-
-	/*
-	 * Caminho do arquivo de entrada e saida
-	 */
-	public Grafo(String caminhoArquivoEntrada, String caminhoArquivoSaida) throws IOException {
-		qtdArestas = 0;
-		this.caminhoArquivoEntrada = caminhoArquivoEntrada;
-		this.numVertices = getNumVertices();
-		this.caminhoArquivoSaida = caminhoArquivoSaida;
-		// inicializaMatriz();
-
-		mapeiaArestasListaAdj();
-		infGraf();
+	public Grafo(String caminhoArquivoLeitura) throws IOException {
+		inicializado = false;
+		this.caminhoArquivoLeitura = caminhoArquivoLeitura;
+		this.numeroVertices = getNumeroVertices();
 	}
 
-	/*
-	 * Retorna uma matriz de adjacencia
-	 */
-	public Integer[][] getMatriz() {
-		for (Integer i : listaAdj.keySet()) {
-			for (Integer m : listaAdj.get(i)) {
-				matriz[i][m] = 1;
-			}
-		}
-		return matriz;
+	abstract protected void insereArestas(int v1, int v2);
+
+	abstract public Map<Integer, Set<No>> buscaLargura(int verticeInicial);
+
+	abstract public List<List<No>> componentesConexos();
+
+	abstract public Map<Integer, Integer> getGrau();
+
+	abstract public List<No> buscaProfundidade(int verticeInicial);
+
+	abstract public void imprimeGrafo();
+
+	public String getCaminhoArquivoLeitura() {
+		return caminhoArquivoLeitura;
 	}
 
-	/*
-	 * Esse metodo organiza a forma que as arestas irão ser construidas dentro
-	 * da lista de adjacencia. ligando x -> y e y -> x. Em outras palavras, ira
-	 * ligar um vertice a outro indo e voltando. Me pergunte se tiver alguma
-	 * duvida
-	 * 
-	 * Autor: Wendel Ribeiro
-	 */
-	private void verticeVertice(int v1, int v2) {
-		qtdArestas += 1;
-		insereArestas(v1, v2);
-		insereArestas(v2, v1);
+	public void setCaminhoArquivoLeitura(String caminhoArquivoLeitura) {
+		this.caminhoArquivoLeitura = caminhoArquivoLeitura;
 	}
 
-	/*
-	 * Insere arestas apartir de dois vertices
-	 */
-
-	private void insereArestas(int v1, int v2) {
-
-		if (listaAdj.containsKey(v1)) {
-			if (!(listaAdj.get(v1).contains(v2))) {
-				listaAdj.get(v1).add(v2);
-			}
-		} else {
-			ArrayList<Integer> listaVertices = new ArrayList<>();
-			listaVertices.add(v2);
-			listaAdj.put(v1, listaVertices);
-		}
+	public String getCaminhoArquivoEscrita() {
+		return caminhoArquivoEscrita;
 	}
 
-	/*
-	 * A partir da Stream que esta direcionada para o arquivo com os vertices e
-	 * as arestas, esse metodo insere em um HashMap as arestas.
-	 */
-	private void mapeiaArestasListaAdj() throws IOException {
-		int v1, v2;
+	public void setCaminhoArquivoEscrita(String caminhoArquivoEscrita) {
+		this.caminhoArquivoEscrita = caminhoArquivoEscrita;
+	}
+
+	public Integer getNumeroArestas() {
+		return numeroArestas;
+	}
+
+	public void setNumeroArestas(Integer numeroArestas) {
+		this.numeroArestas = numeroArestas;
+	}
+
+	public BufferedReader getArquivoLeitura() {
+		return arquivoLeitura;
+	}
+
+	public void setArquivoLeitura(BufferedReader arquivoLeitura) {
+		this.arquivoLeitura = arquivoLeitura;
+	}
+
+	public void setNumeroVertices(Integer numeroVertices) {
+		this.numeroVertices = numeroVertices;
+	}
+
+	protected void inicializaGrafo() throws IOException {
+		int v1, v2, qtdArestas = 0;
+
 		String linha;
 
-		listaAdj = new HashMap<>();
-		linha = br.readLine();
+		BufferedReader arquivo = getArquivoLeitura();
+
+		linha = arquivo.readLine();
+
 		while ((linha != null) && !(linha.isEmpty())) {
+			qtdArestas += 1;
 			v1 = Integer.parseInt(linha.split("[ ]")[0]);
 			v2 = Integer.parseInt(linha.split("[ ]")[1]);
-
-			verticeVertice(v1, v2);
-
-			linha = br.readLine();
+			insereArestas(v1, v2);
+			insereArestas(v2, v1);
+			linha = arquivo.readLine();
 		}
+		setNumeroArestas(qtdArestas);
 	}
 
-	/*
-	 * Inicializa a matriz de acordo com a quantidade de vertices definina
-	 */
-	private void inicializaMatriz() {
-		matriz = new Integer[numVertices][numVertices];
-		for (int i = 0; i < numVertices; i++) {
-			for (int j = 0; j < numVertices; j++) {
-				matriz[i][j] = 0;
-			}
-		}
-	}
-
-	/*
-	 * Retorna a quantidade de vertices lidos do arquivo
-	 */
-	private int getNumVertices() throws IOException {
-		br = new BufferedReader(new FileReader(caminhoArquivoEntrada));
-		return (Integer.parseInt(br.readLine()));
-	}
-
-	public int getQtdArestas() {
-		return qtdArestas;
-	}
-
-	/*
-	 * Retorna o caminho do arquivo txt de arestas e vertices
-	 */
-
-	public String getCaminhoArquivo() {
-		return caminhoArquivoEntrada;
-	}
-
-	/*
-	 * Representação falsa de uma matriz a partir de uma lista de adjacencia
-	 * 
-	 */
-	public void imprimeMatrizDisfarcada() {
-		System.out.print(" ");
-		for (int i = 0; i < numVertices; i++) {
-			System.out.print(" " + (i + 1));
-		}
-		System.out.println();
-		for (int i = 0; i < numVertices; i++) {
-			System.out.print(i + 1 + " ");
-			for (int k = 0; k < numVertices; k++) {
-				if (listaAdj.containsKey(i) && listaAdj.get(i).contains(k)) {
-					System.out.print(1 + " ");
-				} else {
-					System.out.print(0 + " ");
-				}
-
-			}
-			System.out.println();
-		}
-	}
-
-	/*
-	 * Imprime uma matriz inicializada e mapeada com vertices
-	 */
-	public void imprimeMatriz() {
-		if (matriz != null) {
-			System.out.print(" ");
-			for (int i = 0; i < numVertices; i++) {
-				System.out.print(" " + (i + 1));
-			}
-			System.out.println();
-			for (int i = 0; i < numVertices; i++) {
-				System.out.print(i + 1 + " ");
-				for (int k = 0; k < numVertices; k++) {
-					if (i < 9) {
-						System.out.print(matriz[i][k] + " ");
-					} else {
-						System.out.print(matriz[i][k] + "  ");
-					}
-
-				}
-				System.out.println();
-			}
-		} else {
-			System.out.println("Matriz vazia");
-		}
-	}
-
-	public Map<Integer, Integer> getGrau() {
-		Map<Integer, Integer> verticesGrau = new HashMap<>();
-		for (Integer chave : listaAdj.keySet()) {
-			verticesGrau.put(chave, listaAdj.get(chave).size());
-		}
-		return verticesGrau;
-	}
-
-	/*
-	 * Quantidade de vertices
-	 */
-	public int getQtdVertices() {
-		return getGrau().size();
-	}
-
-	/*
-	 * Loucura - Busca em largura implementada com Map, set e uma classe No.
-	 */
-	public Map<Integer, Set<No>> buscaLargura(int verticeInicial) {
-		if (!listaAdj.containsKey(verticeInicial)) {
-			return null;
-		}
-		int nivel = 1;
-		No no = new No(verticeInicial);
-		no.setPai(no);
-		Set<No> listaAberta = new HashSet<>();
-		Set<No> listaFechada = new HashSet<>();
-		Set<No> listaFilhos = null;
-		listaAberta.add(no);
-
-		Map<Integer, Set<No>> arvore = new HashMap<>();
-		arvore.put(0, listaAberta);
-		while (!listaAberta.isEmpty()) {
-			listaFilhos = new HashSet<>();
-			for (No pai : listaAberta) {
-				for (Integer s : listaAdj.get(pai.getValor())) {
-					no = new No(s, pai);
-					if (!listaFechada.contains(no)) {
-						listaFilhos.add(no);
-					}
-				}
-			}
-
-			listaFechada.addAll(listaAberta);
-			listaAberta = new HashSet<>();
-			listaAberta.addAll(listaFilhos);
-			if (!listaFilhos.isEmpty()) {
-				arvore.put(nivel, listaFilhos);
-				nivel++;
-			}
-
-		}
-		return arvore;
-	}
-
-	private void infGraf() throws IOException {
+	public void gravaBuscaProfundidade(String caminhoArquivoSaida, int verticeInicial) throws IOException {
 		BufferedWriter arquivo = new BufferedWriter(new FileWriter(caminhoArquivoSaida));
-		arquivo.append("# n = " + getQtdVertices());
-		arquivo.newLine();
-		arquivo.append("# m = " + getQtdArestas());
-		arquivo.newLine();
-		for (Integer chave : getGrau().keySet()) {
-			arquivo.append(chave + " " + getGrau().get(chave));
+		long tempoInicial = System.currentTimeMillis();
+
+		List<No> listaBusca = buscaProfundidade(verticeInicial);
+
+		long tempoFinal = System.currentTimeMillis();
+		double tempo = ((tempoFinal - tempoInicial) / 1000);
+		System.out.println(((tempoFinal - tempoInicial) / 1000));
+
+		for (No n : listaBusca) {
+			arquivo.append(n.getValor() + " -> PAI(" + n.getPai().getValor() + ")");
 			arquivo.newLine();
+		}
+		arquivo.close();
+		JOptionPane.showMessageDialog(null, "Executou a busca em: " + tempo);
+	}
+
+	public void gravaBuscaLargura(String caminhoArquivoSaida, int verticeInicial) throws IOException {
+		BufferedWriter arquivo = new BufferedWriter(new FileWriter(caminhoArquivoSaida));
+		long tempoInicial = System.currentTimeMillis();
+
+		Map<Integer, Set<No>> mapBusca = buscaLargura(verticeInicial);
+
+		long tempoFinal = System.currentTimeMillis();
+		double tempo = ((tempoFinal - tempoInicial) / 1000);
+		System.out.println(((tempoFinal - tempoInicial) / 1000));
+		for (Integer i : mapBusca.keySet()) {
+			arquivo.append("Nivel " + i);
+			for (No no : mapBusca.get(i)) {
+				arquivo.append("->" + no.getValor());
+			}
+			arquivo.newLine();
+		}
+		arquivo.close();
+		JOptionPane.showMessageDialog(null, "Executou a busca em: " + tempo);
+	}
+
+	public void infComponentesConexos(String caminhoArquivoInformacao) throws IOException {
+
+		int i = 1;
+		BufferedWriter arquivo = new BufferedWriter(new FileWriter(caminhoArquivoInformacao));
+
+		List<List<No>> compConex = componentesConexos();
+		arquivo.append("Quantidade de componentes: " + compConex.size());
+		arquivo.newLine();
+		for (List<No> c : compConex) {
+			StringBuilder s = new StringBuilder();
+			s.append("Quantidade de vertices " + c.size() + " Componente " + i + ": ");
+
+			for (No no : c) {
+				s.append(no.getValor() + " ");
+
+			}
+			arquivo.append(s);
+			arquivo.newLine();
+			i++;
 		}
 		arquivo.close();
 	}
 
-	public List<List<No>> verificaGrafo() {
-		List<List<No>> partesGrafo = new ArrayList<>();
+	public void informacoesGrafo(String caminhoArquivoSaida) throws IOException {
 
-		Stack<Integer> todosVertices = new Stack<>();
-		Stack<Integer> sobras = null;
+		boolean primeiroAcesso = true;
 
-		todosVertices.addAll(listaAdj.keySet());
+		ArrayList<Integer> listaMaiores = new ArrayList<>();
+		ArrayList<Integer> listaMenores = new ArrayList<>();
 
-		int vertice = todosVertices.pop();
+		BufferedWriter arquivo = new BufferedWriter(new FileWriter(caminhoArquivoSaida));
 
-		partesGrafo.add(buscaProfundidade(vertice));
-		No no = null;
-		while (!todosVertices.isEmpty()) {
-			boolean controle = false;
-			sobras = new Stack<>();
-			no = new No(todosVertices.pop());
-			for (List<No> grafo : partesGrafo) {
-				if (grafo.contains(no)) {
-					controle = true;
-				}
+		arquivo.append("# n = " + getNumeroVertices());
+		arquivo.newLine();
+		arquivo.append("# m = " + getNumeroArestas());
+		arquivo.newLine();
+
+		for (Integer chave : getGrau().keySet()) {
+			if (primeiroAcesso) {
+				listaMaiores.add(chave);
+				listaMenores.add(chave);
+				primeiroAcesso = false;
 			}
-			if (controle == false) {
-				sobras.push(no.getValor());
+			if (getGrau().get(chave) > getGrau().get(listaMaiores.get(0))) {
+				listaMaiores = new ArrayList<>();
+				listaMaiores.add(chave);
+			} else if (getGrau().get(chave) == getGrau().get(listaMaiores.get(0))) {
+				listaMaiores.add(chave);
 			}
-			if (!sobras.isEmpty()) {
 
-				partesGrafo.add(buscaProfundidade(sobras.pop()));
+			if (getGrau().get(chave) < getGrau().get(listaMenores.get(0))) {
+				listaMenores = new ArrayList<>();
+				listaMenores.add(chave);
+			} else if (getGrau().get(chave) == getGrau().get(listaMenores.get(0))) {
+				listaMenores.add(chave);
 			}
-			todosVertices.addAll(sobras);
+			arquivo.append(chave + " " + getGrau().get(chave));
+			arquivo.newLine();
+		}
+		if (listaMaiores.size() > 1) {
+			arquivo.append("Lista dos vertices de MAIOR Grau: ");
+		} else {
+			arquivo.append("Vertice de MAIOR Grau: ");
+		}
+		for (Integer maior : listaMaiores) {
+			arquivo.append(maior + " ");
 		}
 
-		return partesGrafo;
+		arquivo.newLine();
+		if (listaMenores.size() > 1) {
+			arquivo.append("Lista dos vertices de MENOR Grau: ");
+		} else {
+			arquivo.append("Vertice de MENOR Grau: ");
+		}
+
+		for (Integer menor : listaMenores) {
+			arquivo.append(menor + " ");
+		}
+		arquivo.close();
+
 	}
 
-	public List<No> buscaProfundidade(int verticeInicial) {
-		if (!listaAdj.containsKey(verticeInicial)) {
-			return null;
+	public int getNumeroVertices() throws IOException {
+		if (inicializado) {
+			return numeroVertices;
+		} else {
+			inicializado = true;
+			arquivoLeitura = new BufferedReader(new FileReader(caminhoArquivoLeitura));
+			return (Integer.parseInt(arquivoLeitura.readLine()));
 		}
-		No no = new No(verticeInicial);
-		no.setPai(no);
-		List<No> listArvore = new ArrayList<>();
-		listArvore.add(no);
-		Stack<No> pilha = new Stack<>();
-		pilha.push(no);
-		while (!pilha.isEmpty()) {
-			for (Integer r : listaAdj.get(no.getValor())) {
-				No filho = new No(r);
-				filho.setPai(new No(no.getValor()));
-				if (!((listArvore.contains(filho)) || (pilha.contains(filho)))) {
-					pilha.push(filho);
-				}
+	}
+
+	public void gravaInfoComponentesConexos(String caminhoArquivoSaida) throws IOException {
+		StringBuilder caminhoMaiorMenor = new StringBuilder();
+		caminhoMaiorMenor.append("maiorMenor");
+		caminhoMaiorMenor.append(caminhoArquivoSaida);
+		BufferedWriter arquivo = new BufferedWriter(new FileWriter(caminhoArquivoSaida));
+		List<No> maior = new ArrayList<>();
+		List<No> menor = new ArrayList<>();
+		List<List<No>> partesGrafo = componentesConexos();
+		int i = 1, numMaior = 0, numMenor = 0;
+		arquivo.append("Quantidade de componentes: " + partesGrafo.size());
+		arquivo.newLine();
+		arquivo.newLine();
+		maior = partesGrafo.get(0);
+		menor = partesGrafo.get(0);
+		for (List<No> listaNo : partesGrafo) {
+			if (listaNo.size() > maior.size()) {
+				maior = listaNo;
+				numMaior = i;
 			}
-			no = pilha.pop();
-			if (!listArvore.contains(no)) {
-				listArvore.add(no);
+			if (listaNo.size() < menor.size()) {
+				menor = listaNo;
+				numMenor = i;
 			}
+			arquivo.append("Quantidade de vertices: " + listaNo.size());
+			arquivo.newLine();
+			arquivo.append("Componente " + i + "={");
+			for (No n : listaNo) {
+				arquivo.append(" " + n.getValor());
+			}
+			arquivo.append(" }");
+			arquivo.newLine();
+			i++;
 		}
-		return listArvore;
+		arquivo.newLine();
+		arquivo.newLine();
+		arquivo.append("Maior componente " + numMaior + ":");
+		for (No n : maior) {
+			arquivo.append(" " + n.getValor());
+		}
+		arquivo.newLine();
+		arquivo.append("Menor componente " + numMenor + ":");
+		for (No n : menor) {
+			arquivo.append(" " + n.getValor());
+		}
+
+		arquivo.close();
+
 	}
 }

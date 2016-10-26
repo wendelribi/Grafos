@@ -1,40 +1,41 @@
 package br.com.teoria.grafo;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
-import javax.swing.JOptionPane;
-
-import br.com.teoria.domain.Grafo;
-import br.com.teoria.domain.Grafo;
+import br.com.teoria.domain.ListaAdjacencia;
+import br.com.teoria.domain.Matriz;
 import br.com.teoria.domain.No;
+
 
 public class Executa {
 
-	public static void main(String[] args) {
-		Grafo g;
-		int[][] matriz;
-
-		// g = new Grafo("C:\\Users\\wendel\\as_graph.txt", 2);
-
+	public static void main(String[] args) throws IOException {
+		long ant, dps;
+		ant = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		/*try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		Matriz matriz = new Matriz("C:\\Users\\wendel\\collaboration_graph.txt");
+		
+		//ListaAdjacencia lista = new ListaAdjacencia("C:\\Users\\wendel\\collaboration_graph.txt");
+		/*matriz.gravaBuscaLargura("C:\\Users\\wendel\\buscaLarguraInformacao.txt", 2);
+		matriz.gravaBuscaLargura("C:\\Users\\wendel\\buscaProfundidadesInformacao.txt", 2);*/
+		
+		//matriz.gravaInfoComponentesConexos("C:\\Users\\wendel\\componetesConexos.txt");
+		dps = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		System.out.println((dps - ant)/1024);
+		//System.out.println(.size());
 		try {
-			g = new Grafo("C:\\Users\\wendel\\arquivo.txt", "C:\\Users\\wendel\\saida.txt");
-			g.verificaGrafo();
-			//Map<Integer, Set<No>> arvore = g.buscaLargura(5);
-			//g.buscaProfundidade(1);
-			/*for(Integer s : arvore.keySet()){
-				System.out.print(s);
-				for(No n : arvore.get(s)){
-					System.out.print("->"+"("+n.getPai().getValor()+")"+n.getValor());
-				}
-				System.out.println();
-			}*/
-			
-			System.out.println();
-		} catch (IOException e) {
+			Thread.sleep(100000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 }

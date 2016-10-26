@@ -1,8 +1,6 @@
 package br.com.teoria.janelas;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,18 +12,10 @@ import br.com.teoria.domain.Matriz;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
-import java.awt.ComponentOrientation;
-import java.awt.Point;
-import java.awt.Frame;
-import java.awt.Window.Type;
-import java.awt.Rectangle;
 import java.awt.Dimension;
-import java.awt.Component;
 import javax.swing.JTextField;
 
 public class SelecionarTipo extends JFrame {
@@ -68,15 +58,16 @@ public class SelecionarTipo extends JFrame {
 		bntMatrizAdj.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				
 				//matriz de adjcencia
 				JFrame janelaEscolhida;
 				try {
+					
 					janelaEscolhida = new Inicial(new Matriz(caminhoArquivo));
 					janelaEscolhida.setTitle("Matriz de Adjacencia");
+					setVisible(false);
 					janelaEscolhida.setVisible(true);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(null, "Arquivo fora do padrão");
@@ -89,16 +80,17 @@ public class SelecionarTipo extends JFrame {
 		JButton bntListAdj = new JButton("Lista de adjacencia");
 		bntListAdj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				
 				//Lista de adjcencia
 				
 				JFrame janelaEscolhida;
 				try {
+					
 					janelaEscolhida = new Inicial(new ListaAdjacencia(caminhoArquivo));
 					janelaEscolhida.setTitle("Lista de Adjacencia");
+					setVisible(false);
 					janelaEscolhida.setVisible(true);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(null, "Arquivo fora do padrão");

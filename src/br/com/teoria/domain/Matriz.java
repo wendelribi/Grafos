@@ -107,7 +107,7 @@ public class Matriz extends Grafo {
 		long tempoFinal = System.currentTimeMillis();
 		double tempo = ((tempoFinal-tempoInicial)/1000); 
 		System.out.println(tempo);
-		JOptionPane.showMessageDialog(null, "Executou a busca em: "+tempo);
+		
 		return arvore;
 	}
 
@@ -195,7 +195,7 @@ public class Matriz extends Grafo {
 		long tempoFinal = System.currentTimeMillis();
 		double tempo = ((tempoFinal-tempoInicial)/1000); 
 		System.out.println(tempo);
-		JOptionPane.showMessageDialog(null, "Executou a busca em: "+tempo);
+		
 		return listArvore;
 	}
 

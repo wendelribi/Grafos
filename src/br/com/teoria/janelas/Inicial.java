@@ -1,35 +1,21 @@
 package br.com.teoria.janelas;
 
-import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import br.com.teoria.domain.Grafo;
-import br.com.teoria.domain.Matriz;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JFileChooser;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Rectangle;
-import javax.swing.JToggleButton;
-import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 import javax.swing.border.TitledBorder;
-import javax.swing.border.BevelBorder;
 import java.awt.Color;
 import javax.swing.border.EtchedBorder;
 
@@ -39,10 +25,9 @@ public class Inicial extends JFrame {
 	private JButton btnComponentesDoGrafo;
 	private JButton btnInformaesDoGrafo;
 	private Grafo grafo;
-	private int tipoGrafo;
 	private JButton btnBuscaDePronfundidade;
 	private JLabel lblBuscas;
-	private String caminhoArquivo;
+
 	/**
 	 * Launch the application.
 	 */

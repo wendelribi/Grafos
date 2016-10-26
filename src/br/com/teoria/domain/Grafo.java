@@ -94,11 +94,15 @@ abstract public class Grafo {
 		setNumeroArestas(qtdArestas);
 	}
 
-	public void gravaBuscaProfundidade(String caminhoArquivoSaida, int verticeInicial) throws IOException {
+	public boolean gravaBuscaProfundidade(String caminhoArquivoSaida, int verticeInicial) throws IOException {
+		List<No> listaBusca;
 		BufferedWriter arquivo = new BufferedWriter(new FileWriter(caminhoArquivoSaida));
 		long tempoInicial = System.currentTimeMillis();
 
-		List<No> listaBusca = buscaProfundidade(verticeInicial);
+		
+		if((listaBusca = buscaProfundidade(verticeInicial))==null){
+			return false; 
+		}
 
 		long tempoFinal = System.currentTimeMillis();
 		double tempo = ((tempoFinal - tempoInicial) / 1000);
@@ -110,14 +114,16 @@ abstract public class Grafo {
 		}
 		arquivo.close();
 		JOptionPane.showMessageDialog(null, "Executou a busca em: " + tempo);
+		return true;
 	}
 
-	public void gravaBuscaLargura(String caminhoArquivoSaida, int verticeInicial) throws IOException {
+	public boolean gravaBuscaLargura(String caminhoArquivoSaida, int verticeInicial) throws IOException {
 		BufferedWriter arquivo = new BufferedWriter(new FileWriter(caminhoArquivoSaida));
+		Map<Integer, Set<No>> mapBusca;
 		long tempoInicial = System.currentTimeMillis();
-
-		Map<Integer, Set<No>> mapBusca = buscaLargura(verticeInicial);
-
+		if((mapBusca = buscaLargura(verticeInicial))==null){
+			return false; 
+		}
 		long tempoFinal = System.currentTimeMillis();
 		double tempo = ((tempoFinal - tempoInicial) / 1000);
 		System.out.println(((tempoFinal - tempoInicial) / 1000));
@@ -130,6 +136,7 @@ abstract public class Grafo {
 		}
 		arquivo.close();
 		JOptionPane.showMessageDialog(null, "Executou a busca em: " + tempo);
+		return true;
 	}
 
 	public void infComponentesConexos(String caminhoArquivoInformacao) throws IOException {

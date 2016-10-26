@@ -124,10 +124,12 @@ public class Inicial extends JFrame {
 						int verticeInicial = Integer.parseInt(JOptionPane.showInputDialog("Informe um numero"));
 						caminho = jf.getSelectedFile().getPath();
 						caminho += ".txt";
-						grafo.gravaBuscaProfundidade(caminho, verticeInicial);
-						Runtime.getRuntime().exec("explorer " + caminho);
+						if((verticeInicial < grafo.getNumeroVertices() && (grafo.gravaBuscaProfundidade(caminho, verticeInicial)))){
+							Runtime.getRuntime().exec("explorer " + caminho);	
+						}else{
+							JOptionPane.showMessageDialog(null, "Vertice não existe.");
+						}
 					} catch (IOException e1) {
-
 						e1.printStackTrace();
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "Erro erro ao digitar numeros");
@@ -151,10 +153,12 @@ public class Inicial extends JFrame {
 						int verticeInicial = Integer.parseInt(JOptionPane.showInputDialog("Informe um numero"));
 						caminho = jf.getSelectedFile().getPath();
 						caminho += ".txt";
-						grafo.gravaBuscaLargura(caminho, verticeInicial);
-						Runtime.getRuntime().exec("explorer " + caminho);
+						if((verticeInicial < grafo.getNumeroVertices()) &&(grafo.gravaBuscaLargura(caminho, verticeInicial))){
+							Runtime.getRuntime().exec("explorer " + caminho);	
+						}else{
+							JOptionPane.showMessageDialog(null, "Vertice não existe.");
+						}
 					} catch (IOException e1) {
-
 						e1.printStackTrace();
 					} catch (NumberFormatException e2) {
 						JOptionPane.showMessageDialog(null, "Erro erro ao digitar numeros");

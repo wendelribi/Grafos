@@ -23,7 +23,7 @@ public class Matriz extends Grafo {
 		try{
 		matriz = new int[numeroVertices][numeroVertices];
 		}catch (OutOfMemoryError e) {
-			JOptionPane.showMessageDialog(null, "Excedeu memoria");
+			JOptionPane.showMessageDialog(null, "Excedeu memória");
 			System.exit(0);
 		}
 		zeraMatriz();
